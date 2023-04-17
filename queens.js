@@ -2,6 +2,7 @@ class Tabuleiro{
     constructor(size){
         this.squares = []
         this.history = []
+        this.results = []
         this.size = size
         for(let i=0;i<this.size;i++){
             let linha = []
@@ -13,8 +14,20 @@ class Tabuleiro{
         this.history.push(this.squares)
     }
 
-    gambiarra(linha,coluna,nrainha){
-        
+    gambiarra(linha){
+        for(let i=0;i<this.size;i++){
+            if(this.is_valid_position(linha,i)){   
+                this.squares[linha][i]=1
+                if(linha == this.size-1){
+                    let result = JSON.parse(JSON.stringify(this.squares))
+                    this.results.push(result)
+                }else{
+                    this.gambiarra(linha+1)
+                }
+                this.squares[linha][i]=0
+            }
+        }
+        return
     }
 
     is_valid_position(linha,coluna){
@@ -44,6 +57,17 @@ class Tabuleiro{
             }
         }
     }
+
+    print_results(){
+        console.log("results")
+        for(let i=0;i<this.results.length;i++){
+            console.log('resultado'+i)
+            for(let j=0;j<this.size;j++){
+                console.log(JSON.stringify(this.results[i][j]))
+            }
+            
+        }
+    }
 }
 // let tabuleiro = []
 
@@ -60,7 +84,6 @@ class Tabuleiro{
 //     console.log(JSON.stringify(tabuleiro[i]))
 // }
 
-let tabuleiro = new Tabuleiro(4)
-tabuleiro.print_all()
-tabuleiro.gambiarra(0,0,0)
-tabuleiro.print_all()
+let tabuleiro = new Tabuleiro(8)
+tabuleiro.gambiarra(0)
+tabuleiro.print_results()
